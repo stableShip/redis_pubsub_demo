@@ -4,12 +4,12 @@ __author__ = 'JIE'
 import redis
 
 r = redis.StrictRedis()
-r.config_set("notify-keyspace-events", "KEA")
 p = r.pubsub()
-# p.
-p.subscribe("__keyspace@0__:test")
-for message in p.listen():
-    print(message)
 
-print(p.get_message())
+def user_sync(message):
+    openid = bytes.decode(message['data'])
+    print (r.get(openid))
 
+
+p.subscribe(**{"channel": user_sync})
+p.run_in_thread()
